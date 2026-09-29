@@ -1,0 +1,14 @@
+# Сгенерировано автоматически сканированием импортов всех .py файлов проекта (2026-09-29).
+# Системные зависимости (не через pip, нужны отдельно на сервере):
+#   - poppler-utils (pdftotext) — для document_ingestion._ingest_pdf()
+#   - tesseract-ocr + пакет языков rus (tesseract-ocr-rus) — для OCR сканов
+#   - libreoffice (headless) — для конвертации .doc (старый формат) и восстановления битых .xlsx
+
+anthropic>=0.40.0       # tz_extraction.py — extract_tz_structured(), ЖИВОЙ вызов НЕ протестирован (см. чат)
+openpyxl>=3.1           # экспорт всех *_smeta_export.py, smeta_builder.py
+pandas>=2.0              # price_parser.py (xlsx прайсы), document_ingestion.py (Excel ТЗ)
+python-docx>=1.1         # document_ingestion.py — .docx
+pdfplumber>=0.11         # document_ingestion.py — таблицы из PDF
+pdf2image>=1.17          # document_ingestion.py — OCR fallback (рендер страницы в картинку)
+pytesseract>=0.3.10      # document_ingestion.py — OCR
+Pillow>=10.0              # document_ingestion.py (PIL) — работа с изображениями

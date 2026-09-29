@@ -1,0 +1,287 @@
+{
+  "_purpose": "Позиции с розничных сайтов-поставщиков, которых не хватало в основной базе (4093 позиции ТК Сервис + прайсы Альмин). Пользователь дал 3 сайта: lider-gk24.ru, proff-comfort.ru, almin.ru — со скидкой ~28% от цены на сайте.",
+  "discount_pct": 28.0,
+  "note": "ВАЖНО про покрытие: (1) almin.ru — главная страница '/' закрыта в robots.txt, но /catalog/... открыт и парсится нормально; проверены разделы 'Бытовая и профессиональная химия' (60 позиций) и 'Инвентарь и материалы для уборки' (60 позиций) — из них 34 реально отсутствовали в базе, добавлены (мешки для мусора разных объёмов, баки, салфетки/губки/перчатки, реагент антигололёдный, дозатор). Остальные разделы каталога Альмина (одноразовая посуда, гигиена и т.д.) не проверялись. (2) lider-gk24.ru — есть скачиваемый прайс-лист (price.pdf), но извлечение через веб-инструмент дало только частичный текст (обрывается на разделе 'Стиральные порошки') — для полной выгрузки нужно скачать PDF вручную и прислать в чат; проверенные 11 позиций в основном уже были в базе. (3) proff-comfort.ru — проверена категория 'Химия профессиональная' (50 позиций) построчно против базы: 48 из 49 клининговых позиций уже есть (тот же опт-каталог брендов, что продаёт ТК Сервис) — добавлена 1 отсутствующая позиция. Разделы 'мешки для мусора' и 'инвентарь' на proff-comfort.ru не проверены (техническая ошибка получения страницы при повторном запросе). Сопоставление 'уже есть / отсутствует' — по совпадению ключевых слов в названии (эвристика), не гарантия 100% точности — при использовании в смете резолвер (matcher.py/resolver.py) всё равно перепроверяет соответствие каждой позиции ТЗ.",
+  "items": [
+    {
+      "name": "Diversey U Oven & Grill Cleaner 500мл (средство для очистки печей и грилей)",
+      "price": 272.0,
+      "unit": "шт",
+      "supplier": "ПРОФ-Комфорт",
+      "source_url": "https://proff-comfort.ru/catalog/khimiya_professionalnaya_/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Дозатор настенный ACCUDOSE",
+      "price": 7258.94,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Кондиционер для белья жидкий 5л МУЛЬТИМЭЙД",
+      "price": 2045.98,
+      "unit": "л",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Средство для стекол 530мл MR.MUSCLE ПОСЛЕ ДОЖДЯ",
+      "price": 377.12,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Средство чистящее кислотное от накипи 1л ALMIN",
+      "price": 969.99,
+      "unit": "л",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Реагент антигололедный 25кг MINERAL SALT",
+      "price": 1031.82,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Таз 12л квадратный ПЛАСТХОЗТОРГ",
+      "price": 228.57,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Губка профилированная 150х67х45мм VILEDA PROFESSIONAL",
+      "price": 199.08,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Губка профилированная 140х85х45мм",
+      "price": 52.7,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Перчатки хозяйственные M YORK",
+      "price": 93.63,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Перчатки хозяйственные XL BI-COLOR Libry",
+      "price": 36.05,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Марля отбеленная 900мм NEW LIFE",
+      "price": 169.71,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Салфетка универсальная 260х200мм HOUSE LUX",
+      "price": 570.02,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Мешок мусорный 700х1200мм 120л EL PACO",
+      "price": 199.06,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Мешок мусорный 600х700мм 60л ALMIN",
+      "price": 66.41,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Мешок мусорный 480х570мм 30л ALMIN",
+      "price": 62.12,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Мешок мусорный 480х570мм 30л ALMIN (8мкм, усиленный)",
+      "price": 68.38,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Мешок мусорный 600х700мм 60л ALMIN (30шт/рулон)",
+      "price": 107.59,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Салфетка универсальная вискозная 350х350мм YORK",
+      "price": 68.03,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Салфетка губчатая 180х160мм YORK",
+      "price": 129.56,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Салфетка универсальная вискозная 350х300мм TEXTOP",
+      "price": 37.9,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Салфетка микроволоконная 380х350мм зелёная VILEDA",
+      "price": 747.14,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Салфетка микроволоконная 380х350мм красная VILEDA",
+      "price": 747.14,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Салфетка микроволоконная 300х300мм красная",
+      "price": 26.78,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Салфетка микроволоконная 290х290мм жёлтая",
+      "price": 19.39,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Бак мусорный 105л ПЛАСТХОЗТОРГ",
+      "price": 2027.7,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Бак мусорный 240л BORA",
+      "price": 6061.01,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Бак мусорный 75л ПЛАСТХОЗТОРГ",
+      "price": 1567.57,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Бак мусорный 150л ПЛАСТХОЗТОРГ",
+      "price": 2675.32,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Держатель флаундер A-VM 400х110мм",
+      "price": 1361.07,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Мешок мусорный 900х1250мм 220л",
+      "price": 201.98,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Щетка для удаления шерсти зелёная ALMIN",
+      "price": 79.56,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Щетка для удаления шерсти розовая с рукояткой ALMIN",
+      "price": 119.56,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Щетка для удаления шерсти бежевая с рукояткой ALMIN",
+      "price": 167.25,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    },
+    {
+      "name": "Мешок мусорный 900х1100мм 180л ALMIN",
+      "price": 1613.69,
+      "unit": "шт",
+      "supplier": "Альмин",
+      "source_url": "https://www.almin.ru/catalog/",
+      "checked_against_base": true
+    }
+  ]
+}

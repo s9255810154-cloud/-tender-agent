@@ -1,0 +1,29 @@
+{
+  "_purpose": "Инвентарь и спецодежда — отдельная категория затрат, которой раньше не было в наших сметах вообще. Долговечное имущество (не расходуется день-в-день, как consumable_norms.json), стоимость раскладывается на месяц через амортизацию.",
+  "source": "расчет_СпецЭкоСервис_ТЗ_1.xlsx — реальный расчёт эксперта-подрядчика, офисный комплекс 15359 м², 20-22 человека персонала",
+  "note": "Итого по разделу — 41 310 ₽/мес (лето) / 43 158 ₽/мес (зима). Количество большинства позиций привязано к численности персонала (спецодежда — 1 комплект/чел; тележки/вёдра — по числу уборщиков смены), не к площади объекта.",
+  "items": [
+    {"name": "Костюм мужской (летний)", "qty": 4, "price_with_vat": 2800, "monthly_amortized": 1555.56, "basis": "per_person (мужчины в штате)"},
+    {"name": "Костюм мужской зимний", "qty": 4, "price_with_vat": 4500, "monthly_amortized": 2500, "basis": "per_person, сезонный"},
+    {"name": "Костюм женский", "qty": 16, "price_with_vat": 2800, "monthly_amortized": 6222.22, "basis": "per_person (женщины в штате)"},
+    {"name": "Полуботинки мужские", "qty": 4, "price_with_vat": 2500, "monthly_amortized": 1388.89, "basis": "per_person"},
+    {"name": "Полуботинки мужские зимние", "qty": 4, "price_with_vat": 3500, "monthly_amortized": 1944.44, "basis": "per_person, сезонный"},
+    {"name": "Сабо женские", "qty": 16, "price_with_vat": 1800, "monthly_amortized": 4000, "basis": "per_person"},
+    {"name": "Тележка двухведерная", "qty": 9, "price_with_vat": 25000, "monthly_amortized": 15625.0, "basis": "по числу уборщиков в смене (крупнейшая статья раздела)"},
+    {"name": "Тележка сервировочная", "qty": 1, "price_with_vat": 15000, "monthly_amortized": 1041.67, "basis": "fixed"},
+    {"name": "Ведро на колесах Syr Эрго NU3 с отжимом 26 л", "qty": 3, "price_with_vat": 20000, "monthly_amortized": 4166.67, "basis": "fixed"},
+    {"name": "Ведро 10 л", "qty": 9, "price_with_vat": 2500, "monthly_amortized": 1562.5, "basis": "по числу уборщиков"},
+    {"name": "Рукоятка облегченная SYR сталь/полипропилен 134 см", "qty": 18, "price_with_vat": 199, "monthly_amortized": 248.75, "basis": "fixed"},
+    {"name": "Держатель МОПа SYR 40x11 см пластик", "qty": 18, "price_with_vat": 2000, "monthly_amortized": 2500, "basis": "fixed"},
+    {"name": "Держатель МОПа SYR Kwiki 15.1x3.2 см пластик", "qty": 9, "price_with_vat": 2600, "monthly_amortized": 1625.0, "basis": "fixed"},
+    {"name": "Комплект для уборки Luscan Professional (щетка+совок)", "qty": 9, "price_with_vat": 516, "monthly_amortized": 322.5, "basis": "fixed"},
+    {"name": "Телескопический шест", "qty": 1, "price_with_vat": 1644, "monthly_amortized": 114.17, "basis": "fixed"},
+    {"name": "Стремянка алюминиевая 7 ступеней TOPFORT", "qty": 1, "price_with_vat": 4000, "monthly_amortized": 277.78, "basis": "fixed"},
+    {"name": "Стремянка алюминиевая 5 ступеней TOPFORT", "qty": 2, "price_with_vat": 2500, "monthly_amortized": 347.22, "basis": "fixed"},
+    {"name": "Тачка садовая", "qty": 1, "price_with_vat": 3000, "monthly_amortized": 208.33, "basis": "fixed, территория"},
+    {"name": "Комплект совок+щетка", "qty": 1, "price_with_vat": 1500, "monthly_amortized": 104.17, "basis": "fixed"},
+    {"name": "Лопата снеговая", "qty": 1, "price_with_vat": 3000, "monthly_amortized": 208.33, "basis": "fixed, только зима"},
+    {"name": "Ледоруб", "qty": 3, "price_with_vat": 1500, "monthly_amortized": 312.5, "basis": "fixed, только зима"}
+  ],
+  "totals": {"summer_monthly": 41310.42, "winter_monthly": 43157.64}
+}

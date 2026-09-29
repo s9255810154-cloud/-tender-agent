@@ -1,0 +1,159 @@
+{
+  "source": "Табель.xlsx — реальные данные о зарплатах и графиках работы (загружено пользователем)",
+  "note": "Группы с n_samples < 2 отброшены как недостаточно надёжные. Разовые/частичные подработки исключены (Мобильная, Ген уборка, Вывоз листвы и т.п. — не полные ставки).",
+  "benchmarks": [
+    {
+      "category": "дворник",
+      "workdays_per_week": 5,
+      "daily_hours": 2.25,
+      "avg_salary": 40625,
+      "min_salary": 16250,
+      "max_salary": 65000,
+      "n_samples": 2
+    },
+    {
+      "category": "дворник",
+      "workdays_per_week": 5,
+      "daily_hours": 10.0,
+      "avg_salary": 60000,
+      "min_salary": 50000,
+      "max_salary": 70000,
+      "n_samples": 2
+    },
+    {
+      "category": "дворник",
+      "workdays_per_week": 7,
+      "daily_hours": 5.0,
+      "avg_salary": 30000,
+      "min_salary": 30000,
+      "max_salary": 30000,
+      "n_samples": 3
+    },
+    {
+      "category": "дворник",
+      "workdays_per_week": 7,
+      "daily_hours": 12.0,
+      "avg_salary": 110000,
+      "min_salary": 110000,
+      "max_salary": 110000,
+      "n_samples": 4
+    },
+    {
+      "category": "упп",
+      "workdays_per_week": 5,
+      "daily_hours": 2.25,
+      "avg_salary": 16250,
+      "min_salary": 16250,
+      "max_salary": 16250,
+      "n_samples": 3
+    },
+    {
+      "category": "упп",
+      "workdays_per_week": 5,
+      "daily_hours": 3.0,
+      "avg_salary": 29800,
+      "min_salary": 20000,
+      "max_salary": 60000,
+      "n_samples": 20
+    },
+    {
+      "category": "упп",
+      "workdays_per_week": 5,
+      "daily_hours": 4.0,
+      "avg_salary": 31788,
+      "min_salary": 27000,
+      "max_salary": 40000,
+      "n_samples": 33
+    },
+    {
+      "category": "упп",
+      "workdays_per_week": 5,
+      "daily_hours": 4.5,
+      "avg_salary": 30000,
+      "min_salary": 27500,
+      "max_salary": 32500,
+      "n_samples": 6
+    },
+    {
+      "category": "упп",
+      "workdays_per_week": 5,
+      "daily_hours": 5.0,
+      "avg_salary": 38800,
+      "min_salary": 30000,
+      "max_salary": 50000,
+      "n_samples": 5
+    },
+    {
+      "category": "упп",
+      "workdays_per_week": 5,
+      "daily_hours": 5.5,
+      "avg_salary": 32000,
+      "min_salary": 30000,
+      "max_salary": 34000,
+      "n_samples": 5
+    },
+    {
+      "category": "упп",
+      "workdays_per_week": 5,
+      "daily_hours": 9.0,
+      "avg_salary": 69526,
+      "min_salary": 55000,
+      "max_salary": 90000,
+      "n_samples": 19
+    },
+    {
+      "category": "упп",
+      "workdays_per_week": 5,
+      "daily_hours": 10.0,
+      "avg_salary": 74444,
+      "min_salary": 30000,
+      "max_salary": 95000,
+      "n_samples": 18
+    },
+    {
+      "category": "упп",
+      "workdays_per_week": 5,
+      "daily_hours": 11.0,
+      "avg_salary": 63571,
+      "min_salary": 25000,
+      "max_salary": 75000,
+      "n_samples": 7
+    },
+    {
+      "category": "упп",
+      "workdays_per_week": 5,
+      "daily_hours": 12.0,
+      "avg_salary": 72200,
+      "min_salary": 58000,
+      "max_salary": 85000,
+      "n_samples": 5
+    },
+    {
+      "category": "упп",
+      "workdays_per_week": 6,
+      "daily_hours": 6.0,
+      "avg_salary": 33333,
+      "min_salary": 15000,
+      "max_salary": 55000,
+      "n_samples": 12
+    },
+    {
+      "category": "упп",
+      "workdays_per_week": 6,
+      "daily_hours": 10.0,
+      "avg_salary": 90000,
+      "min_salary": 90000,
+      "max_salary": 90000,
+      "n_samples": 4
+    },
+    {
+      "category": "упп",
+      "workdays_per_week": 7,
+      "daily_hours": 12.0,
+      "avg_salary": 97600,
+      "min_salary": 80000,
+      "max_salary": 110000,
+      "n_samples": 10
+    }
+  ]
+}

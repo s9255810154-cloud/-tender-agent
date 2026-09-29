@@ -1,0 +1,28 @@
+{
+  "_purpose": "Расценки на технику и вывоз снега для территориальных ТЗ — дополняет territory_norms.json (там нормативы/триггеры, здесь конкретные цены).",
+  "source": "предоставлено пользователем в чате",
+  "rates": [
+    {
+      "id": "vyvoz_snega",
+      "display_name": "Вывоз снега",
+      "unit": "м³",
+      "price": 750,
+      "price_type": "fixed",
+      "vat_included": true
+    },
+    {
+      "id": "pogruzchik_snega_smena",
+      "display_name": "Погрузчик снега, аренда (смена 8 часов)",
+      "unit": "смена (8ч)",
+      "price": 26250,
+      "price_type": "fixed"
+    },
+    {
+      "id": "traktor_arenda_mesyats",
+      "display_name": "Трактор, аренда",
+      "unit": "мес",
+      "price": 150000,
+      "price_type": "fixed"
+    }
+  ]
+}
