@@ -81,6 +81,19 @@ def generate_smeta(
         )
     summary = process_extraction(extraction)
 
+    if summary.staff_count_source == "норматив Роструда (площадь)":
+        from knowledge_base import load_staff_norms
+        scope_warning = load_staff_norms().get("_scope_warning")
+        if scope_warning:
+            warnings.append(f"Численность оценена по нормативу площади: {scope_warning}")
+
+    if summary.region and summary.region != region:
+        warnings.append(
+            f"В документе указан регион «{summary.region}», но расчёт выполнен "
+            f"для региона «{region}» (выбран в форме) — нормативы ФОТ могут не "
+            f"соответствовать фактическому региону объекта."
+        )
+
     # 4. ФОТ — оценка по нормативу
     salary = get_combined_shift_salary(region, object_complexity, schedule_complexity)
     fot_month: Optional[float] = None
@@ -135,12 +148,13 @@ def generate_smeta(
         )
     sheet.blank()
 
+    months = max(summary.contract_months, 1)
     params = ObjectParams(
         area_sqm=summary.area_sqm,
-        cleaning_days=summary.cleaning_days,
-        general_days=summary.general_days,
+        cleaning_days=round(summary.cleaning_days / months),
+        general_days=round(summary.general_days / months),
         staff_count=summary.staff_count,
-        contract_months=summary.contract_months,
+        contract_months=1,
     )
     price_lists = (
         load_general_opt_price_list(supplier="ТК Сервис")

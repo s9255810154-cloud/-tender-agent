@@ -33,8 +33,10 @@ if not _check_password():
 
 st.title("Тендер-агент — расчёт сметы")
 st.caption(
-    "Загрузите ТЗ нового тендера — конвейер извлечёт данные через Claude API "
-    "и соберёт оценочную смету (ФОТ и материалы — по нормативам)."
+    "Загрузите ТЗ нового тендера на уборку ПОМЕЩЕНИЙ — конвейер извлечёт данные "
+    "через Claude API и соберёт оценочную смету (ФОТ и материалы — по нормативам). "
+    "ТЗ на уборку территории/благоустройство пока не поддерживаются (другая методика "
+    "расчёта площади) — результат для них будет недостоверным без предупреждения."
 )
 
 uploaded = st.file_uploader("Загрузите ТЗ (PDF/DOCX/XLSX)", type=["pdf", "docx", "xlsx"])
@@ -79,24 +81,28 @@ if uploaded is not None and st.button("Рассчитать"):
     except Exception as e:
         st.error(f"Неожиданная ошибка: {e}")
     else:
-        st.success(f"Смета готова: {result.object_name}")
-        m1, m2, m3 = st.columns(3)
-        m1.metric("Площадь, м²", f"{result.area_sqm:,.1f}")
-        m1.metric("Дней уборки", result.cleaning_days)
-        m2.metric("Срок, мес", result.contract_months)
-        m2.metric("Численность", result.staff_count)
-        m3.metric(
-            "ФОТ, ₽/мес",
-            f"{result.fot_month:,.0f}" if result.fot_month is not None else "не найден",
-        )
-        for w in result.warnings:
-            st.warning(w)
-        with open(result.xlsx_path, "rb") as f:
-            st.download_button(
-                "Скачать смету (.xlsx)",
-                data=f.read(),
-                file_name=Path(result.xlsx_path).name,
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            )
+        st.session_state["last_result"] = result
     finally:
         os.unlink(tmp_path)
+
+if "last_result" in st.session_state:
+    result = st.session_state["last_result"]
+    st.success(f"Смета готова: {result.object_name}")
+    m1, m2, m3 = st.columns(3)
+    m1.metric("Площадь, м²", f"{result.area_sqm:,.1f}")
+    m1.metric("Дней уборки", result.cleaning_days)
+    m2.metric("Срок, мес", result.contract_months)
+    m2.metric("Численность", result.staff_count, help=result.staff_count_source)
+    m3.metric(
+        "ФОТ, ₽/мес",
+        f"{result.fot_month:,.0f}" if result.fot_month is not None else "не найден",
+    )
+    for w in result.warnings:
+        st.warning(w)
+    with open(result.xlsx_path, "rb") as f:
+        st.download_button(
+            "Скачать смету (.xlsx)",
+            data=f.read(),
+            file_name=Path(result.xlsx_path).name,
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )

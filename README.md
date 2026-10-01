@@ -151,3 +151,6 @@ streamlit run app.py --server.address 127.0.0.1 --server.port 8501
 `ssh -L 8501:127.0.0.1:8501 <сервер>` с компьютера коллеги). Пароль — в
 `.env` (`APP_PASSWORD`). Публичный доступ из интернета — отдельная задача
 (см. `docs/superpowers/specs/2026-10-01-web-interface-design.md`).
+
+Поддерживаются только ТЗ на уборку помещений (не территории/благоустройство) —
+см. ограничение в `docs/superpowers/specs/2026-10-01-web-interface-design.md`.
