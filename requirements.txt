@@ -12,3 +12,5 @@ pdfplumber>=0.11         # document_ingestion.py — таблицы из PDF
 pdf2image>=1.17          # document_ingestion.py — OCR fallback (рендер страницы в картинку)
 pytesseract>=0.3.10      # document_ingestion.py — OCR
 Pillow>=10.0              # document_ingestion.py (PIL) — работа с изображениями
+streamlit>=1.30         # app.py — веб-интерфейс (Этап 1, см. docs/superpowers/specs/2026-10-01-web-interface-design.md)
+python-dotenv>=1.0       # app.py — загрузка .env (ANTHROPIC_API_KEY, APP_PASSWORD)
