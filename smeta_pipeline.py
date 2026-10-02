@@ -47,6 +47,14 @@ def _slugify(name: str) -> str:
     return safe[:60] or "smeta"
 
 
+def _normalize_region(value: str) -> str:
+    """«г. Москва» / «город Москва» / «Москва » -> «москва» — извлечённый
+    Claude текст и выбор в форме иначе почти никогда не совпадут буквально."""
+    normalized = value.strip().lower()
+    normalized = re.sub(r"^(город\s+|г\.\s*|г\s+)", "", normalized)
+    return normalized.strip(" .,")
+
+
 def generate_smeta(
     file_path: str,
     *,
@@ -87,7 +95,7 @@ def generate_smeta(
         if scope_warning:
             warnings.append(f"Численность оценена по нормативу площади: {scope_warning}")
 
-    if summary.region and summary.region != region:
+    if summary.region and _normalize_region(summary.region) != _normalize_region(region):
         warnings.append(
             f"В документе указан регион «{summary.region}», но расчёт выполнен "
             f"для региона «{region}» (выбран в форме) — нормативы ФОТ могут не "

@@ -77,8 +77,10 @@ if uploaded is not None and st.button("Рассчитать"):
                 vat_rate=vat_rate_pct / 100,
             )
     except PipelineError as e:
+        st.session_state.pop("last_result", None)
         st.error(str(e))
     except Exception as e:
+        st.session_state.pop("last_result", None)
         st.error(f"Неожиданная ошибка: {e}")
     else:
         st.session_state["last_result"] = result
@@ -99,10 +101,19 @@ if "last_result" in st.session_state:
     )
     for w in result.warnings:
         st.warning(w)
-    with open(result.xlsx_path, "rb") as f:
+    try:
+        with open(result.xlsx_path, "rb") as f:
+            file_bytes = f.read()
+    except OSError:
+        st.error(
+            "Файл сметы больше не найден на диске (удалён/перемещён) — "
+            "нажмите «Рассчитать» ещё раз, чтобы сгенерировать заново."
+        )
+        st.session_state.pop("last_result", None)
+    else:
         st.download_button(
             "Скачать смету (.xlsx)",
-            data=f.read(),
+            data=file_bytes,
             file_name=Path(result.xlsx_path).name,
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         )
