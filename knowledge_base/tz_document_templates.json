@@ -3,20 +3,6 @@
   "_key_lesson": "'Перечень объектов закупки' (обычно Приложение 1) почти всегда кодирует ПЛОЩАДЬ × КОЛИЧЕСТВО ОБРАБОТОК, а не голую площадь — подтверждено на ОБОИХ известных типах (для помещений — точно НОД по месяцам; для территорий — частично, НОД по видам услуги, не все строки объясняются одной площадью). НЕ пытаться угадать реальную площадь на глаз по одному большому числу — либо искать более позднее приложение с постобъектным перечнем (Приложение 3 для помещений, Приложение 5 для территорий) и сверять оба источника через деление, либо считать НОД по Приложению 1, группируя строки по виду услуги/помещения, а не по всему списку сразу.",
   "templates": [
     {
-      "type_id": "premises_cleaning_direct_area",
-      "display_name": "Уборка помещений (площадь и периодичность в одной таблице, без area-trap)",
-      "detection_required_all": ["убор", "помещен"],
-      "detection_none_of": ["перечень объектов закупки", "территор"],
-      "known_examples": [
-        "Реальный ТЗ клиента (конфиденциально, не хранится в репозитории) — площадь по помещениям + периодичность в одной таблице, без раздела 'Перечень объектов закупки'"
-      ],
-      "typical_appendices": {},
-      "area_extraction_method": "Площадь указана напрямую построчно по помещениям в одной таблице вместе с периодичностью уборки каждого помещения — суммируется без НОД/area-trap, см. EXTRACTION_TOOL_PREMISES_DIRECT_AREA / process_premises_direct_area_extraction() в tz_extraction.py.",
-      "staffing": "Явной численности в тексте обычно нет — норматив Роструда по площади (staff_norms.json), как и для premises_cleaning.",
-      "code_path": "tz_extraction.py: EXTRACTION_TOOL_PREMISES_DIRECT_AREA / process_premises_direct_area_extraction()",
-      "cost_reference": null
-    },
-    {
       "type_id": "premises_and_territory_cleaning",
       "display_name": "Уборка помещений и прилегающей территории (гибрид)",
       "detection_required_all": [
@@ -66,6 +52,20 @@
       "staffing": "В этом примере использована ОФИЦИАЛЬНАЯ статистика ЕМИСС/Росстат (79 181,10 ₽/мес, 'Деятельность по комплексному обслуживанию помещений', Москва, 2025) — надёжнее, чем оценки по площади (staff_norms.json) или рыночные ориентиры от пользователя (real_salary_benchmarks.json). Проверять, есть ли такая ссылка на ЕМИСС в новых документах этого типа — если есть, она приоритетнее.",
       "code_path": "требует объединения EXTRACTION_TOOL + EXTRACTION_TOOL_TERRITORY — отдельная объединённая схема ещё не написана",
       "cost_reference": "knowledge_base/premises_gesn_rates.json (31 позиция, помещения) + territory_gesn_rates_luzhniki.json (5 позиций, территория) — оба government-audited, сумма проверена до копейки против официального итога"
+    },
+    {
+      "type_id": "premises_cleaning_direct_area",
+      "display_name": "Уборка помещений (площадь и периодичность в одной таблице, без area-trap)",
+      "detection_required_all": ["убор", "помещен"],
+      "detection_none_of": ["перечень объектов закупки"],
+      "known_examples": [
+        "Реальный ТЗ клиента (конфиденциально, не хранится в репозитории) — площадь по помещениям + периодичность в одной таблице, без раздела 'Перечень объектов закупки'"
+      ],
+      "typical_appendices": {},
+      "area_extraction_method": "Площадь указана напрямую построчно по помещениям в одной таблице вместе с периодичностью уборки каждого помещения — суммируется без НОД/area-trap, см. EXTRACTION_TOOL_PREMISES_DIRECT_AREA / process_premises_direct_area_extraction() в tz_extraction.py.",
+      "staffing": "Явной численности в тексте обычно нет — норматив Роструда по площади (staff_norms.json), как и для premises_cleaning.",
+      "code_path": "tz_extraction.py: EXTRACTION_TOOL_PREMISES_DIRECT_AREA / process_premises_direct_area_extraction()",
+      "cost_reference": null
     },
     {
       "type_id": "premises_cleaning",
