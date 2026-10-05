@@ -83,6 +83,16 @@ with col2:
     vat_rate_pct = st.number_input(
         "Ставка НДС, %", min_value=0.0, max_value=100.0, value=20.0, step=1.0,
     )
+    contract_months_input = st.number_input(
+        "Срок контракта, мес (только если не определяется из документа)",
+        min_value=0, max_value=120, value=0, step=1,
+        help=(
+            "Нужно заполнить только для ТЗ, где площадь задана напрямую "
+            "по помещениям (без таблицы периодов с датами) — для обычных "
+            "ТЗ с «Перечнем объектов закупки» это поле игнорируется, срок "
+            "берётся из документа. 0 = не указывать."
+        ),
+    )
 
 st.caption(
     "Регион/сложность/график сейчас ограничены единственной заполненной "
@@ -101,6 +111,7 @@ if uploaded is not None and st.button("Рассчитать"):
                 object_complexity=object_complexity,
                 schedule_complexity=schedule_complexity,
                 vat_rate=vat_rate_pct / 100,
+                contract_months_override=contract_months_input or None,
             )
     except PipelineError as e:
         st.session_state.pop("last_result", None)
