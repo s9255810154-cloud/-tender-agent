@@ -1,3 +1,4 @@
+import hmac
 import os
 import tempfile
 from pathlib import Path
@@ -12,19 +13,44 @@ load_dotenv()
 st.set_page_config(page_title="Тендер-агент — смета", layout="centered")
 
 APP_PASSWORD = os.environ.get("APP_PASSWORD")
+MAX_LOGIN_ATTEMPTS = 5
 
 
 def _check_password() -> bool:
     if st.session_state.get("authenticated"):
         return True
+
     st.title("Тендер-агент")
+
+    if not APP_PASSWORD:
+        st.error(
+            "APP_PASSWORD не задан в .env на сервере — вход невозможен. "
+            "Сообщите администратору."
+        )
+        return False
+
+    attempts = st.session_state.get("login_attempts", 0)
+    if attempts >= MAX_LOGIN_ATTEMPTS:
+        st.error(
+            "Слишком много неверных попыток входа. Перезапустите страницу "
+            "позже или обратитесь к администратору."
+        )
+        return False
+
     pwd = st.text_input("Пароль", type="password")
     if st.button("Войти"):
-        if APP_PASSWORD and pwd == APP_PASSWORD:
+        if hmac.compare_digest(pwd, APP_PASSWORD):
             st.session_state["authenticated"] = True
+            st.session_state.pop("login_attempts", None)
             st.rerun()
         else:
-            st.error("Неверный пароль")
+            st.session_state["login_attempts"] = attempts + 1
+            remaining = MAX_LOGIN_ATTEMPTS - st.session_state["login_attempts"]
+            if remaining > 0:
+                st.error(f"Неверный пароль. Осталось попыток: {remaining}.")
+            else:
+                st.error("Неверный пароль. Попытки исчерпаны.")
+                st.rerun()
     return False
 
 
