@@ -489,3 +489,159 @@ def detect_document_type(doc: IngestedDocument) -> str:
             continue
         return template["type_id"]
     return "unknown"
+
+
+# ============================== Третий тип ТЗ: помещения, площадь+периодичность в одной таблице ==============================
+#
+# Обнаружено на реальном документе клиента: нет раздела "Перечень объектов
+# закупки" (area-trap) вообще — площадь и периодичность уборки заданы
+# напрямую построчно по помещениям в одной таблице. detect_document_type()
+# различает этот тип от premises_cleaning по ОТСУТСТВИЮ фразы "перечень
+# объектов закупки" (см. detection_none_of в tz_document_templates.json).
+
+EXTRACTION_TOOL_PREMISES_DIRECT_AREA = {
+    "name": "record_premises_direct_area_extraction",
+    "description": (
+        "Записать структурированные данные из ТЗ на уборку помещений, где "
+        "площадь и периодичность уборки заданы НАПРЯМУЮ построчно по "
+        "помещениям в одной таблице (не через накопленный объём услуг за "
+        "период)."
+    ),
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "object_name": {"type": "string"},
+            "region": {"type": "string"},
+            "address": {"type": "string"},
+            "kpgz_code": {"type": ["string", "null"]},
+            "rooms": {
+                "type": "array",
+                "description": "Строки таблицы с площадью и периодичностью по каждому помещению.",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "room_name": {"type": "string"},
+                        "area_sqm": {"type": "number"},
+                        "periodicity_raw": {
+                            "type": "string",
+                            "description": "Текст периодичности КАК В ДОКУМЕНТЕ, например '1 раз в день'.",
+                        },
+                        "cleaning_times_per_month": {
+                            "type": ["number", "null"],
+                            "description": (
+                                "Переведи periodicity_raw в среднее число уборок В МЕСЯЦ "
+                                "(ежедневно по будням ≈ 21.7; раз в неделю ≈ 4.33; раз в "
+                                "2 дня ≈ 10.8 и т.д. — это перевод единиц, а не оценка, "
+                                "НЕ придумывай число, если периодичность не указана явно "
+                                "текстом — тогда верни null)."
+                            ),
+                        },
+                    },
+                    "required": ["room_name", "area_sqm", "periodicity_raw"],
+                },
+            },
+            "general_cleaning_per_week": {
+                "type": ["number", "null"],
+                "description": "Отдельная периодичность генеральной уборки в неделю, если явно указана, иначе null.",
+            },
+            "explicit_staff_count": {
+                "type": ["object", "null"],
+                "properties": {
+                    "value": {"type": "integer"},
+                    "condition": {"type": "string"},
+                },
+            },
+            "consumables": {
+                "type": "array",
+                "description": "Из раздела/таблицы расходных материалов.",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "raw_name": {"type": "string"},
+                        "characteristics": {"type": "string"},
+                        "unit": {"type": "string"},
+                        "explicit_qty": {"type": ["number", "null"]},
+                    },
+                    "required": ["raw_name", "unit"],
+                },
+            },
+        },
+        "required": ["object_name", "region", "rooms", "consumables"],
+    },
+}
+
+
+def extract_tz_structured_direct_area(
+    doc: IngestedDocument, api_key: Optional[str] = None, model: str = "claude-sonnet-5"
+) -> dict:
+    """Аналог extract_tz_structured(), но для типа premises_cleaning_direct_area."""
+    import anthropic
+
+    client = anthropic.Anthropic(api_key=api_key)
+    response = client.messages.create(
+        model=model,
+        max_tokens=8192,
+        system=EXTRACTION_SYSTEM_PROMPT,
+        tools=[EXTRACTION_TOOL_PREMISES_DIRECT_AREA],
+        tool_choice={"type": "tool", "name": "record_premises_direct_area_extraction"},
+        messages=[{"role": "user", "content": doc.full_text}],
+    )
+    for block in response.content:
+        if block.type == "tool_use" and block.name == "record_premises_direct_area_extraction":
+            return block.input
+    raise RuntimeError("Claude не вернул ожидаемый tool_use блок — проверьте ответ вручную.")
+
+
+def process_premises_direct_area_extraction(
+    extraction: dict, contract_months: int,
+) -> ExtractedObjectSummary:
+    """
+    Площадь — прямая сумма (без area-trap/НОД, в отличие от
+    process_extraction()). «Дней уборки в месяц» — площадь-взвешенное
+    среднее cleaning_times_per_month по помещениям: ОЦЕНКА смешанной
+    периодичности одним числом для совместимости с build_materials_table()
+    (которая ожидает одну базу на весь объект), не точный факт из
+    документа. contract_months нельзя вычислить из этого типа документа
+    (нет таблицы периодов с датами) — передаётся явно вызывающим кодом.
+    """
+    rooms = extraction["rooms"]
+    area = sum(r["area_sqm"] for r in rooms)
+
+    weighted = [r for r in rooms if r.get("cleaning_times_per_month") is not None]
+    if weighted:
+        total_weighted_area = sum(r["area_sqm"] for r in weighted)
+        cleaning_days = round(
+            sum(r["area_sqm"] * r["cleaning_times_per_month"] for r in weighted)
+            / total_weighted_area
+        ) if total_weighted_area else 0
+    else:
+        cleaning_days = 0
+
+    general_days = round(extraction.get("general_cleaning_per_week") or 0)
+
+    staff = extraction.get("explicit_staff_count")
+    explicit_staff_value = staff["value"] if staff else None
+    if explicit_staff_value is not None:
+        staff_count = explicit_staff_value
+        staff_count_source = "явно указано в ТЗ"
+    else:
+        from knowledge_base import estimate_staff_count_by_area
+        staff_count = estimate_staff_count_by_area(area, cleanings_per_shift=1)
+        staff_count_source = "норматив Роструда (площадь)"
+
+    tz_items = build_tz_items(extraction)
+
+    return ExtractedObjectSummary(
+        object_name=extraction["object_name"],
+        region=extraction["region"],
+        address=extraction.get("address"),
+        area_sqm=area,
+        cleaning_days=cleaning_days,
+        general_days=general_days,
+        contract_months=contract_months,
+        schedule={"general_cleaning_per_week": extraction.get("general_cleaning_per_week")},
+        explicit_staff_count=explicit_staff_value,
+        staff_count=staff_count,
+        staff_count_source=staff_count_source,
+        tz_items=tz_items,
+    )
