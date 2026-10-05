@@ -484,5 +484,8 @@ def detect_document_type(doc: IngestedDocument) -> str:
         pairs = template.get("detection_any_of_pairs")
         if pairs and not any(all(stem in target_text for stem in pair) for pair in pairs):
             continue
+        none_of = template.get("detection_none_of")
+        if none_of and any(stem in target_text for stem in none_of):
+            continue
         return template["type_id"]
     return "unknown"
