@@ -199,21 +199,39 @@ def _ingest_pdf(path: str, ocr_lang: str) -> IngestedDocument:
 # ============================== DOCX ==============================
 
 def _ingest_docx(path: str) -> IngestedDocument:
+    """
+    КРИТИЧНО: d.paragraphs (python-docx) не включает текст внутри таблиц —
+    это отдельная структура документа. Реальные ТЗ почти всегда держат
+    самое важное (объёмы по периодам, площади по помещениям, расходники)
+    именно в таблицах Word — без явного рендера таблиц в текст Claude их
+    просто не увидит (баг найден на реальном ТЗ, где вся площадь/
+    периодичность уборки были в таблице, а full_text оставался пустым на
+    это место). Поэтому таблицы рендерятся в текст СВЕРХ структурированного
+    doc.tables, а не вместо него.
+    """
     import docx
     doc = IngestedDocument(source_path=path, doc_format=DocFormat.DOCX)
     d = docx.Document(path)
 
     paragraphs = [p.text for p in d.paragraphs if p.text.strip()]
     text = "\n".join(paragraphs)
-    doc.pages.append(PageContent(
-        index=1, label="Документ целиком", text=text, method=ExtractionMethod.TEXT_LAYER,
-    ))
 
+    table_text_blocks = []
     for i, table in enumerate(d.tables, start=1):
         rows = [[cell.text for cell in row.cells] for row in table.rows]
         doc.tables.append(ExtractedTable(
             page_or_sheet=f"таблица {i}", rows=rows, method=ExtractionMethod.TABLE_STRUCTURED,
         ))
+        rendered_rows = [" | ".join(cell.strip() for cell in row) for row in rows if any(cell.strip() for cell in row)]
+        if rendered_rows:
+            table_text_blocks.append(f"[Таблица {i}]\n" + "\n".join(rendered_rows))
+
+    if table_text_blocks:
+        text = text + "\n\n" + "\n\n".join(table_text_blocks)
+
+    doc.pages.append(PageContent(
+        index=1, label="Документ целиком", text=text, method=ExtractionMethod.TEXT_LAYER,
+    ))
 
     if not text.strip() and not doc.tables:
         doc.warnings.append("Документ Word не содержит ни текста, ни таблиц — проверьте файл вручную.")
