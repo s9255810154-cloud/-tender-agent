@@ -485,7 +485,7 @@ def detect_document_type(doc: IngestedDocument) -> str:
         if pairs and not any(all(stem in target_text for stem in pair) for pair in pairs):
             continue
         none_of = template.get("detection_none_of")
-        if none_of and any(stem in target_text for stem in none_of):
+        if none_of and any(stem in doc.full_text.lower() for stem in none_of):
             continue
         return template["type_id"]
     return "unknown"
@@ -610,14 +610,16 @@ def process_premises_direct_area_extraction(
     weighted = [r for r in rooms if r.get("cleaning_times_per_month") is not None]
     if weighted:
         total_weighted_area = sum(r["area_sqm"] for r in weighted)
-        cleaning_days = round(
+        cleaning_times_per_month_avg = (
             sum(r["area_sqm"] * r["cleaning_times_per_month"] for r in weighted)
             / total_weighted_area
         ) if total_weighted_area else 0
     else:
-        cleaning_days = 0
+        cleaning_times_per_month_avg = 0
+    cleaning_days = round(cleaning_times_per_month_avg * contract_months)
 
-    general_days = round(extraction.get("general_cleaning_per_week") or 0)
+    general_cleaning_per_week = extraction.get("general_cleaning_per_week") or 0
+    general_days = round(general_cleaning_per_week * 52 / 12 * contract_months)
 
     staff = extraction.get("explicit_staff_count")
     explicit_staff_value = staff["value"] if staff else None
