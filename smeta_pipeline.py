@@ -20,7 +20,10 @@ from smeta_builder import (
     CURRENCY_FMT, FINAL_FONT, PERCENT_FMT, TOTAL_FONT,
     SmetaSheet, build_contract_term_section, build_materials_table,
 )
-from tz_extraction import extract_tz_structured, process_extraction
+from tz_extraction import (
+    detect_document_type, extract_tz_structured, extract_tz_structured_direct_area,
+    process_extraction, process_premises_direct_area_extraction,
+)
 
 
 class PipelineError(Exception):
@@ -66,6 +69,7 @@ def generate_smeta(
     ),
     vat_rate: float = 0.20,
     output_dir: str = "Outputs/tender-agent-smeta",
+    contract_months_override: Optional[int] = None,
 ) -> SmetaPipelineResult:
     warnings: list[str] = []
 
@@ -77,17 +81,56 @@ def generate_smeta(
             f"текста). Предупреждения: {'; '.join(doc.warnings) or 'нет'}."
         )
 
-    # 2. Живой вызов Claude API — структурированное извлечение
-    extraction = extract_tz_structured(doc)
+    # 2. Определить тип документа и выбрать схему извлечения
+    doc_type = detect_document_type(doc)
 
-    # 3. Детерминированная пост-обработка
-    if not extraction.get("contract_periods"):
+    if doc_type == "premises_cleaning":
+        extraction = extract_tz_structured(doc)
+        if not extraction.get("contract_periods"):
+            raise PipelineError(
+                "В документе не найдены объёмы услуг по периодам (раздел "
+                "«Перечень объектов закупки»). Автоматический расчёт "
+                "невозможен — нужна ручная проверка документа."
+            )
+        summary = process_extraction(extraction)
+
+    elif doc_type == "premises_cleaning_direct_area":
+        if contract_months_override is None:
+            raise PipelineError(
+                "Для этого типа ТЗ срок контракта не задан в виде таблицы "
+                "периодов — укажите срок контракта в месяцах в форме и "
+                "повторите расчёт."
+            )
+        extraction = extract_tz_structured_direct_area(doc)
+        if not extraction.get("rooms"):
+            raise PipelineError(
+                "В документе не найдены строки с площадью и периодичностью "
+                "по помещениям. Автоматический расчёт невозможен — нужна "
+                "ручная проверка документа."
+            )
+        summary = process_premises_direct_area_extraction(extraction, contract_months_override)
+
+    else:
         raise PipelineError(
-            "В документе не найдены объёмы услуг по периодам (раздел "
-            "«Перечень объектов закупки»). Автоматический расчёт "
-            "невозможен — нужна ручная проверка документа."
+            f"Тип ТЗ «{doc_type}» пока не поддерживается автоматическим "
+            "расчётом сметы (поддерживаются только документы с прямой "
+            "площадью по помещениям или с накопленным объёмом услуг за "
+            "период). Нужна ручная проверка документа."
         )
-    summary = process_extraction(extraction)
+
+    if doc_type == "premises_cleaning_direct_area":
+        warnings.append(
+            "«Дней уборки» для этого ТЗ — площадь-взвешенная оценка "
+            "смешанной периодичности по помещениям, не точный факт из "
+            "документа. Проверьте вручную перед использованием сметы."
+        )
+        if summary.cleaning_days == 0:
+            warnings.append(
+                "Не удалось определить периодичность уборки ни для одного "
+                "помещения (текст периодичности не распознан) — база "
+                "материалов в смете будет занижена, требуется ручная "
+                "проверка документа и корректировка жёлтых ячеек."
+            )
 
     if summary.staff_count_source == "норматив Роструда (площадь)":
         from knowledge_base import load_staff_norms
