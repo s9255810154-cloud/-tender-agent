@@ -83,9 +83,11 @@ return "unknown"
 
 ### Компонент 2 — Новый тип в реестре (`knowledge_base/tz_document_templates.json`)
 
-Новая запись `premises_cleaning_direct_area`, вставленная **первой** в
-список `templates[]` (специфичные типы проверяются раньше общих — уже
-существующее правило, см. `_detection_lesson` в файле):
+Новая запись `premises_cleaning_direct_area`, вставленная в список
+`templates[]` **сразу после** `premises_and_territory_cleaning` (гибрид
+проверяется первым — специфичные типы проверяются раньше общих, уже
+существующее правило, см. `_detection_lesson` в файле; итоговый порядок
+скорректирован в ревью, см. коммит `2483852`):
 
 ```json
 {
