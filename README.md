@@ -138,3 +138,19 @@ APScheduler/Celery + PostgreSQL + Telegram + Google Sheets — это следу
 после проверки, что пайплайн работает end-to-end на сервере как есть (шаги 1-5).
 Не обязательно делать всё сразу — можно погонять как есть скриптами, пока не
 понадобится автоматический график/уведомления.
+
+## Шаг 8 — веб-интерфейс (Этап 1)
+
+```bash
+cd /srv/cloudcli-users/ecoadmin/Projects/tender-agent
+source .venv/bin/activate
+streamlit run app.py --server.address 127.0.0.1 --server.port 8501
+```
+
+Открыть `http://127.0.0.1:8501` (локально на сервере или через SSH-туннель:
+`ssh -L 8501:127.0.0.1:8501 <сервер>` с компьютера коллеги). Пароль — в
+`.env` (`APP_PASSWORD`). Публичный доступ из интернета — отдельная задача
+(см. `docs/superpowers/specs/2026-10-01-web-interface-design.md`).
+
+Поддерживаются только ТЗ на уборку помещений (не территории/благоустройство) —
+см. ограничение в `docs/superpowers/specs/2026-10-01-web-interface-design.md`.
