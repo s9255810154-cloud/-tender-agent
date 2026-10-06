@@ -95,12 +95,6 @@ def generate_smeta(
         summary = process_extraction(extraction)
 
     elif doc_type == "premises_cleaning_direct_area":
-        if contract_months_override is None:
-            raise PipelineError(
-                "Для этого типа ТЗ срок контракта не задан в виде таблицы "
-                "периодов — укажите срок контракта в месяцах в форме и "
-                "повторите расчёт."
-            )
         extraction = extract_tz_structured_direct_area(doc)
         if not extraction.get("rooms"):
             raise PipelineError(
@@ -108,7 +102,21 @@ def generate_smeta(
                 "по помещениям. Автоматический расчёт невозможен — нужна "
                 "ручная проверка документа."
             )
-        summary = process_premises_direct_area_extraction(extraction, contract_months_override)
+        contract_months = contract_months_override
+        if contract_months is None:
+            contract_months = extraction.get("explicit_contract_months")
+            if contract_months is not None:
+                warnings.append(
+                    f"Срок контракта определён из текста документа: {contract_months} мес. "
+                    "Проверьте вручную перед использованием сметы."
+                )
+        if contract_months is None:
+            raise PipelineError(
+                "Для этого типа ТЗ срок контракта не задан в виде таблицы "
+                "периодов и не найден явным числом в тексте — укажите срок "
+                "контракта в месяцах в форме и повторите расчёт."
+            )
+        summary = process_premises_direct_area_extraction(extraction, contract_months)
 
     else:
         raise PipelineError(
